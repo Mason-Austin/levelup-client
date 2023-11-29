@@ -34,7 +34,7 @@ const EventForm = ({ user }) => {
     e.preventDefault();
 
     const event = {
-      game: Number(currentEvent.gameId),
+      gameId: Number(currentEvent.gameId),
       description: currentEvent.description,
       date: currentEvent.date,
       time: currentEvent.time,
