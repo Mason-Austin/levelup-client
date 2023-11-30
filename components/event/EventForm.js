@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { createEvent } from '../../utils/data/eventData';
+import { createEvent, updateEvent } from '../../utils/data/eventData';
 import { getGames } from '../../utils/data/gameData';
 
 const initialState = {
@@ -12,10 +12,10 @@ const initialState = {
   time: '',
 };
 
-const EventForm = ({ user }) => {
-  const [games, setGames] = useState([]);
-  const [currentEvent, setCurrentEvent] = useState(initialState);
+const EventForm = ({ user, initialEvent = null }) => {
   const router = useRouter();
+  const [games, setGames] = useState([]);
+  const [currentEvent, setCurrentEvent] = useState(initialEvent || initialState);
 
   useEffect(() => {
     getGames().then(setGames);
@@ -42,7 +42,11 @@ const EventForm = ({ user }) => {
     };
 
     // Send POST request to your API
-    createEvent(event).then(() => router.push('/events/home'));
+    if (initialEvent) {
+      updateEvent(event, initialEvent.id);
+    } else {
+      createEvent(event).then(() => router.push('/events/home'));
+    }
   };
 
   return (
@@ -96,6 +100,12 @@ EventForm.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
   }).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  initialEvent: PropTypes.object,
+};
+
+EventForm.defaultProps = {
+  initialEvent: null,
 };
 
 export default EventForm;
