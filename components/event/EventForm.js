@@ -12,7 +12,7 @@ const initialState = {
   time: '',
 };
 
-const EventForm = ({ user, initialEvent = null }) => {
+const EventForm = ({ user, initialEvent }) => {
   const router = useRouter();
   const [games, setGames] = useState([]);
   const [currentEvent, setCurrentEvent] = useState(initialEvent || initialState);
@@ -20,6 +20,13 @@ const EventForm = ({ user, initialEvent = null }) => {
   useEffect(() => {
     getGames().then(setGames);
   }, []);
+
+  useEffect(() => {
+    // Update the form fields when the initialEvent prop changes
+    if (initialEvent) {
+      setCurrentEvent(initialEvent);
+    }
+  }, [initialEvent]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +41,7 @@ const EventForm = ({ user, initialEvent = null }) => {
     e.preventDefault();
 
     const event = {
-      gameId: Number(currentEvent.gameId),
+      gameId: currentEvent.game ? Number(currentEvent.game.id) : Number(currentEvent.gameId),
       description: currentEvent.description,
       date: currentEvent.date,
       time: currentEvent.time,
@@ -43,7 +50,7 @@ const EventForm = ({ user, initialEvent = null }) => {
 
     // Send POST request to your API
     if (initialEvent) {
-      updateEvent(event, initialEvent.id);
+      updateEvent(event, initialEvent.id).then(() => router.push('/events/home'));
     } else {
       createEvent(event).then(() => router.push('/events/home'));
     }
@@ -59,7 +66,7 @@ const EventForm = ({ user, initialEvent = null }) => {
             name="gameId"
             onChange={handleChange}
             className="mb-3"
-            value={currentEvent.gameId}
+            value={currentEvent.game ? Number(currentEvent.game.id) : Number(currentEvent.gameId)}
             required
           >
             <option value="">Select a Game</option>
@@ -89,7 +96,7 @@ const EventForm = ({ user, initialEvent = null }) => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Submit
+          {currentEvent.game ? 'Save' : 'Create'}
         </Button>
       </Form>
     </>

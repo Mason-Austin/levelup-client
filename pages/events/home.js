@@ -11,7 +11,6 @@ function Home() {
   useEffect(() => {
     getEvents().then((data) => setEvents(data));
   }, []);
-
   return (
     <article className="games">
       <h1>Events</h1>
@@ -24,7 +23,7 @@ function Home() {
       </Button>
       {events.map((event) => (
         <section key={`event--${event.id}`} className="game">
-          <EventCard title={event.game.title} description={event.description} date={event.date} time={event.time} />
+          <EventCard title={event.game.title} description={event.description} date={event.date} time={event.time} id={event.id} />
         </section>
       ))}
     </article>

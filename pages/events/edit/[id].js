@@ -13,7 +13,7 @@ const EditEvent = () => {
   useEffect(() => {
     getSingleEvent(id).then(setEditEvent);
   }, [id]);
-
+  console.warn('before inital', editEvent);
   return (
     <div>
       <h2>Register New Event</h2>
