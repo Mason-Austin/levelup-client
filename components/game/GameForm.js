@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { createGame, getGameTypes } from '../../utils/data/gameData';
+import { createGame, getGameTypes, updateGame } from '../../utils/data/gameData';
 
 const initialState = {
   skillLevel: 1,
@@ -12,19 +12,20 @@ const initialState = {
   gameTypeId: 0,
 };
 
-const GameForm = ({ user }) => {
+const GameForm = ({ user, initialGame }) => {
   const [gameTypes, setGameTypes] = useState([]);
-  /*
-  Since the input fields are bound to the values of
-  the properties of this state variable, you need to
-  provide some default values.
-  */
-  const [currentGame, setCurrentGame] = useState(initialState);
+  const [currentGame, setCurrentGame] = useState(initialGame || initialState);
   const router = useRouter();
 
   useEffect(() => {
     getGameTypes().then(setGameTypes);
   }, []);
+
+  useEffect(() => {
+    if (initialGame) {
+      setCurrentGame(initialGame);
+    }
+  }, [initialGame]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,20 +36,23 @@ const GameForm = ({ user }) => {
   };
 
   const handleSubmit = (e) => {
-    // Prevent form from being submitted
-    e.preventDefault();
+    // PrGame form from being submitted
+    e.prGameDefault();
 
     const game = {
       maker: currentGame.maker,
       title: currentGame.title,
       numberOfPlayers: Number(currentGame.numberOfPlayers),
       skillLevel: Number(currentGame.skillLevel),
-      gameType: Number(currentGame.gameTypeId),
+      gameType: currentGame.game_type ? Number(currentGame.game_type.id) : Number(currentGame.gameTypeId),
       userId: user.id,
     };
 
-    // Send POST request to your API
-    createGame(game).then(() => router.push('/games/home'));
+    if (currentGame) {
+      updateGame(game).then(() => router.push('/games/home'));
+    } else {
+      createGame(game).then(() => router.push('/games/home'));
+    }
   };
 
   return (
@@ -77,7 +81,7 @@ const GameForm = ({ user }) => {
             name="gameTypeId"
             onChange={handleChange}
             className="mb-3"
-            value={currentGame.gameTypeId}
+            value={currentGame.game_type ? Number(currentGame.game_type.id) : Number(currentGame.gameTypeId)}
             required
           >
             <option value="">Select a Game Type</option>
@@ -95,7 +99,7 @@ const GameForm = ({ user }) => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Submit
+          {currentGame.game ? 'Save' : 'Create'}
         </Button>
       </Form>
     </>
@@ -106,6 +110,12 @@ GameForm.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
   }).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  initialGame: PropTypes.object,
+};
+
+GameForm.defaultProps = {
+  initialGame: null,
 };
 
 export default GameForm;
