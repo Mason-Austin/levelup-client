@@ -31,5 +31,19 @@ const updateEvent = (updatedEvent, eventId) => new Promise((resolve, reject) => 
     .catch((error) => reject(error));
 });
 
+const getSingleEvent = (eventId) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/events/${eventId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then(resolve)
+    .catch(reject);
+});
+
 // eslint-disable-next-line import/prefer-default-export
-export { getEvents, createEvent, updateEvent };
+export {
+  getEvents, createEvent, updateEvent, getSingleEvent,
+};
