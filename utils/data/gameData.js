@@ -1,5 +1,16 @@
 import { clientCredentials } from '../client';
 
+const deleteSingleGame = (gameId) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/games/${gameId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(resolve)
+    .catch(reject);
+});
+
 const getGames = () => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/games`)
     .then((response) => response.json())
@@ -51,4 +62,6 @@ const getSingleGame = (gameId) => new Promise((resolve, reject) => {
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export { getGames, createGame, getGameTypes, updateGame, getSingleGame };
+export {
+  getGames, createGame, getGameTypes, updateGame, getSingleGame, deleteSingleGame,
+};
