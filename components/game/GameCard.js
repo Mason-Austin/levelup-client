@@ -19,6 +19,7 @@ const GameCard = ({
       deleteSingleGame(id).then(() => onUpdate());
     }
   };
+
   return (
     <Card className="text-center">
       <Card.Header>{title}</Card.Header>
