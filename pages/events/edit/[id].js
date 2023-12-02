@@ -8,10 +8,18 @@ const EditEvent = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { id } = router.query;
-  const [editEvent, setEditEvent] = useState();
+  const [editEvent, setEditEvent] = useState({});
 
   useEffect(() => {
-    getSingleEvent(id).then(setEditEvent);
+    getSingleEvent(id).then((event) => {
+      setEditEvent({
+        id: event.id,
+        gameId: event.game.id,
+        description: event.description,
+        date: event.date,
+        time: event.time,
+      });
+    });
   }, [id]);
 
   return (

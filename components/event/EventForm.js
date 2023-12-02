@@ -41,7 +41,7 @@ const EventForm = ({ user, initialEvent }) => {
     e.preventDefault();
 
     const event = {
-      gameId: currentEvent.game ? Number(currentEvent.game.id) : Number(currentEvent.gameId),
+      gameId: currentEvent.gameId,
       description: currentEvent.description,
       date: currentEvent.date,
       time: currentEvent.time,
@@ -66,7 +66,7 @@ const EventForm = ({ user, initialEvent }) => {
             name="gameId"
             onChange={handleChange}
             className="mb-3"
-            value={currentEvent.game ? Number(currentEvent.game.id) : Number(currentEvent.gameId)}
+            value={currentEvent.gameId}
             required
           >
             <option value="">Select a Game</option>
@@ -96,7 +96,7 @@ const EventForm = ({ user, initialEvent }) => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          {currentEvent.game ? 'Save' : 'Create'}
+          {currentEvent ? 'Save' : 'Create'}
         </Button>
       </Form>
     </>
