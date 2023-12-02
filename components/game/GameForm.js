@@ -37,19 +37,19 @@ const GameForm = ({ user, initialGame }) => {
 
   const handleSubmit = (e) => {
     // PrGame form from being submitted
-    e.prGameDefault();
+    e.preventDefault();
 
     const game = {
       maker: currentGame.maker,
       title: currentGame.title,
-      numberOfPlayers: Number(currentGame.numberOfPlayers),
-      skillLevel: Number(currentGame.skillLevel),
-      gameType: currentGame.game_type ? Number(currentGame.game_type.id) : Number(currentGame.gameTypeId),
+      numberOfPlayers: currentGame.numberOfPlayers,
+      skillLevel: currentGame.skillLevel,
+      gameType: currentGame.gameTypeId,
       userId: user.id,
     };
 
     if (currentGame) {
-      updateGame(game).then(() => router.push('/games/home'));
+      updateGame(game, currentGame.id).then(() => router.push('/games/home'));
     } else {
       createGame(game).then(() => router.push('/games/home'));
     }
@@ -81,7 +81,7 @@ const GameForm = ({ user, initialGame }) => {
             name="gameTypeId"
             onChange={handleChange}
             className="mb-3"
-            value={currentGame.game_type ? Number(currentGame.game_type.id) : Number(currentGame.gameTypeId)}
+            value={currentGame.gameTypeId}
             required
           >
             <option value="">Select a Game Type</option>
@@ -99,7 +99,7 @@ const GameForm = ({ user, initialGame }) => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          {currentGame.game ? 'Save' : 'Create'}
+          Create
         </Button>
       </Form>
     </>
@@ -108,7 +108,7 @@ const GameForm = ({ user, initialGame }) => {
 
 GameForm.propTypes = {
   user: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
   }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   initialGame: PropTypes.object,

@@ -25,7 +25,7 @@ const GameCard = ({
             router.push(`/games/edit/${id}`);
           }}
         >
-          Edit Event
+          Edit Game
         </Button>
       </Card.Footer>
     </Card>
@@ -33,7 +33,7 @@ const GameCard = ({
 };
 
 GameCard.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   maker: PropTypes.string.isRequired,
   numberOfPlayers: PropTypes.number.isRequired,
