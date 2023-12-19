@@ -11,10 +11,16 @@ const deleteSingleEvent = (eventId) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const getEvents = () => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/events`)
+const getEvents = (uid) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/events`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${uid}`,
+    },
+  })
     .then((response) => response.json())
-    .then(resolve)
+    .then((data) => resolve(data))
     .catch(reject);
 });
 
@@ -59,7 +65,7 @@ const leaveEvent = (event, uid) => new Promise((resolve, reject) => {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `${uid}`,
+      Authorization: `${uid}`,
     },
   })
     .then((data) => resolve(data))
@@ -71,7 +77,7 @@ const joinEvent = (event, uid) => new Promise((resolve, reject) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `${uid}`,
+      Authorization: `${uid}`,
     },
   })
     .then((data) => resolve(data))
